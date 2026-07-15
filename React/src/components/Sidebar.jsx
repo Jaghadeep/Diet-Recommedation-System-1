@@ -8,10 +8,14 @@ import {
   Menu,
   X,
   RotateCcw,
-  Apple
+  Apple,
+  Cloud,
+  CloudOff,
+  RefreshCw,
+  Database
 } from 'lucide-react';
 
-export default function Sidebar({ activeTab, setActiveTab, profile, onReset }) {
+export default function Sidebar({ activeTab, setActiveTab, profile, onReset, isSyncing, isOffline }) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const navItems = [
@@ -19,6 +23,7 @@ export default function Sidebar({ activeTab, setActiveTab, profile, onReset }) {
     { id: 'planner', label: 'Meal Planner', icon: Utensils },
     { id: 'recipes', label: 'Recipe Library', icon: BookOpen },
     { id: 'shopping', label: 'Shopping List', icon: ShoppingCart },
+    { id: 'tables', label: 'Data Tables', icon: Database },
   ];
 
   const getGoalText = (goal) => {
@@ -36,9 +41,41 @@ export default function Sidebar({ activeTab, setActiveTab, profile, onReset }) {
 
   const menuContent = (
     <>
-      <div className="logo-container">
-        <Apple className="logo-icon" />
-        <span className="logo-text">NutriGuide</span>
+      <div className="logo-container" style={{ marginBottom: '1.5rem', display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: '0.25rem' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+          <Apple className="logo-icon" />
+          <span className="logo-text">NutriGuide</span>
+        </div>
+        <div 
+          className="sync-status-indicator" 
+          style={{ 
+            fontSize: '0.75rem', 
+            display: 'flex', 
+            alignItems: 'center', 
+            gap: '0.35rem', 
+            paddingLeft: '0.25rem', 
+            marginTop: '0.25rem',
+            color: isOffline ? 'var(--accent)' : isSyncing ? 'var(--text-muted)' : 'var(--primary)',
+            transition: 'color 0.2s ease'
+          }}
+        >
+          {isOffline ? (
+            <>
+              <CloudOff size={13} style={{ color: 'var(--accent)' }} />
+              <span style={{ fontWeight: 500 }}>Offline Mode</span>
+            </>
+          ) : isSyncing ? (
+            <>
+              <RefreshCw size={13} className="animate-spin" />
+              <span>Saving to cloud...</span>
+            </>
+          ) : (
+            <>
+              <Cloud size={13} style={{ color: 'var(--primary)' }} />
+              <span style={{ color: 'var(--text-muted)' }}>Synced to Firebase</span>
+            </>
+          )}
+        </div>
       </div>
 
       <nav style={{ flexGrow: 1 }}>

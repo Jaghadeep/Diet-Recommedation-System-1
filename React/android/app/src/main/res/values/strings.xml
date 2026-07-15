@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">NutriGuide</string>
+    <string name="title_activity_main">NutriGuide</string>
+    <string name="package_name">com.nutriguide.app</string>
+    <string name="custom_url_scheme">com.nutriguide.app</string>
+</resources>

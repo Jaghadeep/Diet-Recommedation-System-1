@@ -1,0 +1,12 @@
+{
+  "profile": null,
+  "mealPlan": null,
+  "completedMeals": {
+    "breakfast": false,
+    "lunch": false,
+    "dinner": false,
+    "snack": false
+  },
+  "waterIntake": 0,
+  "shoppingCheckedItems": {}
+}

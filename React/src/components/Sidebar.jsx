@@ -12,7 +12,8 @@ import {
   Cloud,
   CloudOff,
   RefreshCw,
-  Database
+  Database,
+  MessageSquare
 } from 'lucide-react';
 
 export default function Sidebar({ activeTab, setActiveTab, profile, onReset, isSyncing, isOffline }) {
@@ -23,6 +24,7 @@ export default function Sidebar({ activeTab, setActiveTab, profile, onReset, isS
     { id: 'planner', label: 'Meal Planner', icon: Utensils },
     { id: 'recipes', label: 'Recipe Library', icon: BookOpen },
     { id: 'shopping', label: 'Shopping List', icon: ShoppingCart },
+    { id: 'chat', label: 'AI Diet Coach', icon: MessageSquare },
     { id: 'tables', label: 'Data Tables', icon: Database },
   ];
 
@@ -112,6 +114,7 @@ export default function Sidebar({ activeTab, setActiveTab, profile, onReset, isS
               </div>
             </div>
           </div>
+
           <button 
             onClick={onReset} 
             className="btn btn-ghost" 

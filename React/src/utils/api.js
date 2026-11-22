@@ -134,3 +134,30 @@ export async function resetState() {
     shoppingCheckedItems: {}
   };
 }
+
+/**
+ * Send a chat message to the Diet Coach Chatbot.
+ */
+export async function sendChatMessage(message, history, profile, mealPlan, completedMeals, waterIntake) {
+  const response = await fetch(`${BACKEND_URL}/chat`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      message,
+      history,
+      profile,
+      mealPlan,
+      completedMeals,
+      waterIntake
+    }),
+  });
+
+  if (!response.ok) {
+    throw new Error('Failed to communicate with AI Coach backend');
+  }
+
+  return await response.json();
+}
+

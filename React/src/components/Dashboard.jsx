@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Flame, Droplet, Dumbbell, Award, Plus, Minus, CheckCircle, Circle } from 'lucide-react';
+import { Flame, Droplet, Dumbbell, Award, Plus, Minus, CheckCircle, Circle, Bot, MessageSquare } from 'lucide-react';
 
 const tipsByGoal = {
   lose: [
@@ -25,7 +25,7 @@ const tipsByGoal = {
   ]
 };
 
-export default function Dashboard({ profile, mealPlan, completedMeals, toggleMealEaten, waterIntake, setWaterIntake }) {
+export default function Dashboard({ profile, mealPlan, completedMeals, toggleMealEaten, waterIntake, setWaterIntake, setActiveTab }) {
   const [tip, setTip] = useState('');
 
   useEffect(() => {
@@ -95,6 +95,43 @@ export default function Dashboard({ profile, mealPlan, completedMeals, toggleMea
           <span className="badge badge-primary">{profile.dietType}</span>
           <span className="badge badge-secondary">{getGoalLabel(profile.goal)}</span>
         </div>
+      </div>
+
+      {/* AI Coach Quick-Access Banner */}
+      <div 
+        onClick={() => setActiveTab && setActiveTab('chat')}
+        className="glass-panel" 
+        style={{ 
+          display: 'flex', 
+          alignItems: 'center', 
+          justifyContent: 'space-between', 
+          padding: '1rem 1.5rem', 
+          marginBottom: '1.5rem', 
+          borderRadius: '16px', 
+          background: 'linear-gradient(135deg, rgba(16, 185, 129, 0.12), rgba(59, 130, 246, 0.12))', 
+          border: '1px solid rgba(16, 185, 129, 0.25)', 
+          cursor: 'pointer',
+          transition: 'transform 0.2s, box-shadow 0.2s'
+        }}
+      >
+        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+          <div style={{ width: '2.75rem', height: '2.75rem', borderRadius: '50%', background: 'var(--primary)', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 4px 12px rgba(16, 185, 129, 0.3)' }}>
+            <Bot size={22} />
+          </div>
+          <div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              <h3 style={{ margin: 0, fontSize: '1.05rem', fontWeight: 600 }}>Need meal ideas or want to log food?</h3>
+              <span className="badge badge-primary" style={{ fontSize: '0.7rem', padding: '0.2rem 0.5rem' }}>AI Powered</span>
+            </div>
+            <p style={{ margin: 0, fontSize: '0.85rem', color: 'var(--text-muted)' }}>
+              Ask your NutriGuide AI Coach to swap recipes, suggest healthy dishes, or track your water.
+            </p>
+          </div>
+        </div>
+        <button className="btn btn-primary" style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', whiteSpace: 'nowrap' }}>
+          <MessageSquare size={16} />
+          <span>Chat with Coach</span>
+        </button>
       </div>
 
       <div className="grid-3" style={{ marginBottom: '2rem' }}>

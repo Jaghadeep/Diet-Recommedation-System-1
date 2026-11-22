@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NutriGuide - Software Engineering Documentation</title>
+  <!-- Marked.js for Markdown parsing -->
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <!-- Mermaid.js for Diagrams -->
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <!-- KaTeX for Math -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+  <style>
+    :root {
+      --primary: #10b981;
+      --primary-dark: #059669;
+      --text-main: #1f2937;
+      --text-muted: #4b5563;
+      --bg-page: #f9fafb;
+      --bg-card: #ffffff;
+      --border: #e5e7eb;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      color: var(--text-main);
+      background-color: var(--bg-page);
+      line-height: 1.6;
+      padding: 2rem 1rem;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      background: var(--bg-card);
+      padding: 3rem 3.5rem;
+      border-radius: 12px;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+      border: 1px solid var(--border);
+    }
+
+    /* Print / Export Floating Action Bar */
+    .action-bar {
+      position: sticky;
+      top: 1rem;
+      z-index: 100;
+      display: flex;
+      justify-content: flex-end;
+      gap: 0.75rem;
+      margin-bottom: 2rem;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 0.6rem 1.25rem;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      cursor: pointer;
+      box-shadow: 0 2px 4px rgba(16, 185, 129, 0.3);
+      transition: background 0.2s, transform 0.1s;
+    }
+
+    .btn:hover {
+      background: var(--primary-dark);
+      transform: translateY(-1px);
+    }
+
+    .btn-secondary {
+      background: white;
+      color: var(--text-main);
+      border: 1px solid var(--border);
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    }
+
+    .btn-secondary:hover {
+      background: #f3f4f6;
+    }
+
+    /* Typography */
+    h1, h2, h3, h4 {
+      color: #111827;
+      font-weight: 700;
+      line-height: 1.3;
+    }
+
+    h1 {
+      font-size: 2.2rem;
+      border-bottom: 2px solid var(--primary);
+      padding-bottom: 0.75rem;
+      margin-bottom: 1.5rem;
+    }
+
+    h2 {
+      font-size: 1.5rem;
+      margin-top: 2.5rem;
+      margin-bottom: 1rem;
+      padding-bottom: 0.4rem;
+      border-bottom: 1px solid var(--border);
+      color: #065f46;
+    }
+
+    h3 {
+      font-size: 1.2rem;
+      margin-top: 1.5rem;
+      margin-bottom: 0.75rem;
+    }
+
+    p {
+      margin-bottom: 1rem;
+      color: var(--text-muted);
+    }
+
+    ul, ol {
+      margin-bottom: 1.2rem;
+      padding-left: 1.8rem;
+      color: var(--text-muted);
+    }
+
+    li {
+      margin-bottom: 0.4rem;
+    }
+
+    strong {
+      color: #111827;
+    }
+
+    hr {
+      border: 0;
+      height: 1px;
+      background: var(--border);
+      margin: 2.5rem 0;
+    }
+
+    /* Code & Blocks */
+    pre {
+      background: #1e293b;
+      color: #f8fafc;
+      padding: 1.25rem;
+      border-radius: 8px;
+      overflow-x: auto;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 0.85rem;
+      margin-bottom: 1.5rem;
+      line-height: 1.5;
+    }
+
+    code {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 0.88em;
+      background: #f3f4f6;
+      color: #047857;
+      padding: 0.15rem 0.35rem;
+      border-radius: 4px;
+    }
+
+    pre code {
+      background: transparent;
+      color: inherit;
+      padding: 0;
+    }
+
+    /* Tables */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1.5rem 0;
+      font-size: 0.88rem;
+    }
+
+    th, td {
+      border: 1px solid var(--border);
+      padding: 0.75rem 1rem;
+      text-align: left;
+    }
+
+    th {
+      background-color: #f8fafc;
+      font-weight: 600;
+      color: #374151;
+    }
+
+    tr:nth-child(even) {
+      background-color: #fafafa;
+    }
+
+    /* Mermaid diagrams container */
+    .mermaid {
+      background: white;
+      padding: 1.5rem;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      margin: 1.5rem 0;
+      display: flex;
+      justify-content: center;
+    }
+
+    /* Print styles */
+    @media print {
+      body {
+        background: white;
+        padding: 0;
+        font-size: 11pt;
+      }
+
+      .container {
+        box-shadow: none;
+        border: none;
+        padding: 0;
+        max-width: 100%;
+      }
+
+      .action-bar {
+        display: none !important;
+      }
+
+      pre, blockquote, table, .mermaid {
+        page-break-inside: avoid;
+      }
+
+      h1, h2, h3 {
+        page-break-after: avoid;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <div class="action-bar">
+      <button class="btn btn-secondary" onclick="window.history.back()">Back</button>
+      <button class="btn" onclick="window.print()">🖨️ Print / Save as PDF</button>
+    </div>
+
+    <div id="content">Loading documentation...</div>
+  </div>
+
+  <!-- Raw Markdown Data Embedded -->
+  <script type="text/markdown" id="raw-markdown">
+# NutriGuide: Intelligent Precision Nutrition & Clinical Lifestyle Management Platform
+## Complete Software Engineering Documentation & Project Report
+
+---
+
+## 1. Problem Statement
+
+### 1.1 Background & Context
+Modern lifestyle patterns, sedentary desk jobs, and shifting dietary habits have led to an unprecedented surge in lifestyle-related non-communicable diseases (NCDs), including Type-2 Diabetes Mellitus, Hypertension, Cardiovascular Diseases (CVD), and Polycystic Ovary Syndrome (PCOS). Dietary management remains the cornerstone of both prevention and therapeutic intervention. 
+
+However, individuals attempting to regulate their diet face substantial obstacles:
+- **Generic & Impractical Diets**: Existing dietary applications predominantly utilize Western-centric nutritional databases (e.g., USDA) and lack nuanced understanding of regional culinary practices, particularly Indian dietary patterns rich in diverse legumes, spices, flatbreads, and regional preparations.
+- **Static Calorie Counters**: Traditional mobile trackers treat daily calorie targets as static arithmetic equations, ignoring real-time physiological stress, fluctuating daily physical exertion, metabolic rates, and sleep-induced recovery.
+- **Siloed Wearable Telemetry**: While millions of users wear smartwatches capturing continuous vitals (heart rate, SpO2, step count, active calories burned, stress levels), this telemetry remains siloed in fitness dashboards and is rarely translated into actionable dietary adjustments.
+- **Cognitive Fatigue & Manual Logging**: Tracking individual ingredients is labor-intensive, resulting in high user drop-off within 7 to 14 days. Furthermore, users lack real-time access to clinical nutritionists for immediate queries, meal swaps, or hydration reminders.
+- **Lack of Explainability (Black-Box Recommendations)**: Machine learning models that suggest meals rarely explain *why* a particular meal was recommended, eroding user trust and adherence.
+
+### 1.2 Proposed Solution: NutriGuide
+**NutriGuide** is an intelligent, full-stack, cross-platform precision health and nutrition platform. It bridges wearable Internet-of-Things (IoT) telemetry, Indian clinical dietary guidelines (ICMR-NIN standards), hybrid machine-learning recommendation algorithms, and an autonomous, agentic LLM (Google Gemini 3) Diet Coach.
+
+NutriGuide solves the problem by:
+1. **Clinical BMR/TDEE & Macro Personalization**: Calculating basal metabolic rate and macronutrient distribution dynamically based on clinical anthropometric formulas (Mifflin-St Jeor).
+2. **Wearable IoT Stream Ingestion & Preprocessing**: Processing raw smartwatch telemetry streams, imputing corrupted readings, computing sleep recovery scores, and dynamically adapting caloric and hydration targets.
+3. **Hybrid Recommendation Engine with Explainable AI (XAI)**: Combining content-based medical filtering, collaborative filtering from peer ratings, and rule-based clinical safety filters, accompanied by transparent natural language justifications.
+4. **Agentic Conversational Diet Coach**: Implementing an autonomous AI coach powered by Gemini 3 that not only answers complex clinical queries but also autonomously executes UI workflows (logging water, toggling completed meals, swapping recipes, and navigating views) via a structured action protocol.
+5. **Fault-Tolerant Multi-Tier Persistence**: Guaranteeing continuous offline/online operation across MySQL, SQLite fallback, and client-side `localStorage`.
+
+---
+
+## 2. Software Requirements Specification (SRS)
+
+### 2.1 User Personas
+- **Persona 1: Working Professional (Sedentary/High Stress)**: Needs automated meal planning that adapts to irregular sleep and high daily stress, requires automated grocery checklists, and benefits from an interactive coach to log water effortlessly.
+- **Persona 2: Clinical Patient (Managing Type-2 Diabetes / Hypertension)**: Requires strict sodium (<2000mg/day) and free sugar (<25g/day) constraints according to ICMR-NIN guidelines, with meal recommendations clearly indicating safety compliance.
+- **Persona 3: Fitness Enthusiast (Weight Loss / Muscle Gain)**: Tracks precise protein-to-carbohydrate ratios, monitors real-time active calories burned from smartwatches, and logs daily meal completion.
+
+### 2.2 Functional Requirements (FR)
+
+| Req ID | Module | Description | Priority |
+| :--- | :--- | :--- | :--- |
+| **FR-01** | User Onboarding | The system shall capture user anthropometrics (age, gender, height, weight, activity level, fitness goal, dietary preference) and compute BMR, TDEE, and target macros (Protein, Carbs, Fat). | High |
+| **FR-02** | Telemetry Pipeline | The system shall ingest raw smartwatch telemetry (`smartwatch_data.csv`), clean corrupted entries (NaN, ERROR, out-of-bounds BPM/SpO2), compute sleep recovery scores, and stream simulated real-time records. | High |
+| **FR-03** | Hybrid Recommender | The system shall generate personalized meal recommendations using a weighted hybrid of Content-Based Filtering (Cosine Similarity over nutritional vectors + medical constraints) and Collaborative Filtering (User-Item rating matrix). | High |
+| **FR-04** | Explainable AI (XAI) | Every recommended recipe shall include transparent textual justifications detailing why it fits the user’s metabolic state, vitals, and medical profile. | High |
+| **FR-05** | Meal Planning & Swapping | The system shall generate a daily 4-slot meal plan (Breakfast, Lunch, Dinner, Snack) and allow users to swap any slot with an alternate nutritionally equivalent recipe. | High |
+| **FR-06** | Meal & Water Tracking | The system shall allow users to check off completed meals and log hydration (in 250ml cup increments up to an 8-cup / 2.0L daily target). | High |
+| **FR-07** | Smart Shopping List | The system shall aggregate ingredients across all planned meals, classify them into categorized departments (Produce, Proteins, Dairy, Pantry), and provide an interactive checklist. | Medium |
+| **FR-08** | Autonomous AI Coach | The system shall integrate a conversational agent (Gemini 3) that accepts natural language queries, references live user metrics, and autonomously emits structured `ACTION_TRIGGER` commands to mutate frontend state. | High |
+| **FR-09** | Clinical RDA Evaluation | The system shall benchmark total daily nutritional intake against ICMR-NIN Recommended Dietary Allowances (RDA) for energy, fiber, sodium, calcium, iron, and vitamins. | High |
+| **FR-10** | Dual-Database Persistence | The backend shall persist state in MySQL, automatically fallback to local SQLite (`database.db`) if MySQL is unavailable, and allow the frontend to fallback to `localStorage` when offline. | High |
+
+### 2.3 Non-Functional Requirements (NFR)
+
+- **NFR-01: Performance & Latency**: API responses for state updates and recommendations must execute in under 300ms. AI Diet Coach conversational turns must return in under 2.5 seconds using optimized Google Gemini flash-lite models.
+- **NFR-02: Availability & Fault Tolerance**: System uptime must exceed 99.5%. In the event of backend server disconnection, the frontend shall continue uninterrupted utilizing client-side caching (`localStorage`). In the event of Gemini API quota exhaustion or network disruption, the chatbot shall automatically fallback to the local deterministic rule-based NLP matcher.
+- **NFR-03: Security & Privacy**: Sensitive health telemetry and biometric indicators must be securely processed. Database credentials and API keys must be isolated in server-side `.env` files and never exposed to the client bundle.
+- **NFR-04: Cross-Platform Compatibility**: The web frontend must render responsively across mobile, tablet, and desktop screens (viewport widths 360px to 2560px) and compile natively to Android APK via Capacitor.
+- **NFR-05: Usability & Accessibility**: The UI shall follow modern Glassmorphism principles with high color contrast, readable typography, and intuitive Lucide icons.
+
+---
+
+## 3. Software Design Document (SDD)
+
+### 3.1 Architectural Pattern
+NutriGuide adopts a **Client-Server-Agentic Architecture** with asynchronous event dispatching:
+1. **Presentation Layer (Frontend)**: React 19 single-page application built on Vite, utilizing reactive component state hooks and encapsulated service abstractions.
+2. **Application & Orchestration Layer (Backend)**: Python Flask RESTful API providing statistical data pipelines, hybrid recommendation mathematical kernels, and LLM prompt orchestration.
+3. **Intelligence Layer (Google Gemini)**: Multimodal Large Language Model executing agentic intent parsing and conversational generation.
+4. **Data Persistence Layer**: Dual-relational database architecture (Primary: MySQL; Local Embedded: SQLite) with client-side mirrored browser storage (`localStorage`).
+
+```mermaid
+graph TB
+    subgraph Client Layer [Frontend - React 19 / Capacitor Mobile APK]
+        UI[Glassmorphic UI / Dashboard]
+        Router[Tab View Controller]
+        State[React State & LocalStorage Cache]
+        APIClient[REST API Client / utils/api.js]
+    end
+
+    subgraph Service Layer [Backend - Python Flask Server :5000]
+        FlaskApp[Flask REST API Server]
+        Pipeline[Data Cleaning & Telemetry Pipeline]
+        Recommender[Hybrid Recommendation & XAI Engine]
+        Clinical[ICMR-NIN RDA Benchmark Validator]
+        ChatEngine[Gemini Agentic Prompt Orchestrator]
+        FallbackNLP[Deterministic Rule-Based Matcher]
+    end
+
+    subgraph External & AI Services
+        GeminiAPI[Google Gemini 3 LLM API]
+        SmartwatchFeed[Smartwatch IoT CSV Feed]
+    end
+
+    subgraph Persistence Layer
+        MySQL[(MySQL 8.0 Primary)]
+        SQLite[(SQLite Embedded database.db)]
+    end
+
+    UI --> Router
+    Router --> State
+    State --> APIClient
+    APIClient --> FlaskApp
+
+    FlaskApp --> Pipeline
+    FlaskApp --> Recommender
+    FlaskApp --> Clinical
+    FlaskApp --> ChatEngine
+
+    SmartwatchFeed --> Pipeline
+    ChatEngine --> GeminiAPI
+    ChatEngine -.->|Timeout / 404 Fallback| FallbackNLP
+
+    FlaskApp --> MySQL
+    MySQL -.->|Connection Failure Fallback| SQLite
+```
+
+### 3.2 Database Schema (Entity Relationship Diagram)
+
+```mermaid
+erDiagram
+    USERS ||--o| MEAL_PLANS : has
+    USERS ||--o| COMPLETED_MEALS : tracks
+    USERS ||--o| WATER_INTAKE : logs
+    USERS ||--o| SHOPPING_CHECKED_ITEMS : stores
+    USERS ||--o| SMARTWATCH_TELEMETRY : streams
+    USERS ||--o| MEDICAL_CONDITIONS : diagnoses
+    USERS ||--o{ RECIPE_RATINGS : rates
+
+    USERS {
+        string id PK
+        string name
+        string gender
+        int age
+        double weight
+        double height
+        string activity_level
+        string goal
+        string diet_type
+        int bmr
+        int tdee
+        int target_calories
+        int target_protein
+        int target_carbs
+        int target_fat
+    }
+
+    MEAL_PLANS {
+        string user_id PK, FK
+        text breakfast_recipe
+        text lunch_recipe
+        text dinner_recipe
+        text snack_recipe
+    }
+
+    COMPLETED_MEALS {
+        string user_id PK, FK
+        int breakfast
+        int lunch
+        int dinner
+        int snack
+    }
+
+    WATER_INTAKE {
+        string user_id PK, FK
+        int water_intake
+    }
+
+    SHOPPING_CHECKED_ITEMS {
+        string user_id PK, FK
+        text checked_items
+    }
+
+    SMARTWATCH_TELEMETRY {
+        string user_id PK, FK
+        double heart_rate
+        double spo2
+        int steps
+        double sleep_hours
+        string activity_level
+        int stress_level
+        int calories_burned
+        int recovery_score
+        timestamp updated_at
+    }
+
+    MEDICAL_CONDITIONS {
+        string user_id PK, FK
+        int diabetes
+        int hypertension
+        int heart_disease
+        int obesity_pcos
+    }
+
+    RECIPE_RATINGS {
+        int id PK
+        string user_id FK
+        string recipe_id
+        int rating
+        text review
+        timestamp created_at
+    }
+```
+
+### 3.3 RESTful API Specification
+
+| Endpoint | Method | Payload / Params | Response | Description |
+| :--- | :--- | :--- | :--- | :--- |
+| `/api/state` | `GET` | None | `{ profile, mealPlan, completedMeals, waterIntake, shoppingCheckedItems }` | Fetches consolidated application state. |
+| `/api/state` | `POST` | State JSON slice | `{ status: "success", state: {...} }` | Merges updates into user records. |
+| `/api/profile` | `POST` | `{ name, age, weight, height, gender, activityLevel, goal, dietType }` | `{ status: "success", profile: {...} }` | Computes BMR/TDEE and saves profile. |
+| `/api/reset` | `POST` | None | `{ status: "reset_complete", state: {...} }` | Resets all user records to defaults. |
+| `/api/smartwatch/telemetry` | `GET` / `POST` | Smartwatch metrics | `{ telemetry: {...} }` | Fetches or writes latest wearable vitals. |
+| `/api/smartwatch/pipeline-stats`| `GET` | None | `{ totalRawRecords, cleanedRecords, metricsSummary }` | Returns data cleaning pipeline telemetry. |
+| `/api/smartwatch/sample-stream` | `GET` | `?index=N` | `{ currentRecord, nextIndex, hasMore }` | Streams time-series IoT records. |
+| `/api/recommendations/hybrid` | `POST` | `{ mealType, category, contentWeight }` | `[ { id, title, score, xaiJustification, ... } ]` | Computes XAI hybrid recommendations. |
+| `/api/nutrition/analyze` | `POST` | `{ mealPlan, profile, medicalConditions }` | `{ totals, rdaComparisons, clinicalAlerts }` | Evaluates intake against ICMR-NIN RDA. |
+| `/api/rate` | `POST` | `{ recipeId, rating, review }` | `{ success: true, recipeId, rating }` | Logs collaborative rating score (1-5). |
+| `/api/chat` | `POST` | `{ message, history, profile, mealPlan, waterIntake }` | `{ reply: "...", action: { type, ... } }` | Conversational Gemini AI Diet Coach turn. |
+
+---
+
+## 4. Implementation Documentation & GitHub Guide
+
+### 4.1 Technology Stack
+
+```
+================================================================================
+Frontend:              React 19, Vite 8, Lucide React, Capacitor 8
+Backend:               Python 3.13, Flask 3.x, Werkzeug, python-dotenv
+Database:              MySQL 8.0 (Primary) / SQLite 3 (Automatic Fallback)
+Data Pipeline:         Python Custom Cleaning Pipeline (NumPy/Pandas logic)
+AI Engine:             Google Gemini 3 API (gemini-3.5-flash-lite, v1beta REST)
+Clinical Standards:    ICMR-NIN (National Institute of Nutrition, India) RDA 2024
+Mobile Target:         Android 14+ via Capacitor Native Bridge (NutriGuide.apk)
+================================================================================
+```
+
+### 4.2 Project Directory Structure
+
+```text
+d:\React\
+├── NutriGuide.apk                   # Pre-compiled Android Native Package
+├── README.md                        # Project landing readme
+├── PROJECT_DOCUMENTATION.md         # Comprehensive project documentation
+├── PROJECT_DOCUMENTATION.html       # Printable and browser-viewable documentation
+├── backend/                         # Flask Backend Application
+│   ├── app.py                       # Core Flask API & Gemini Agent Orchestrator (1,457 lines)
+│   ├── data_pipeline.py             # Wearable IoT data cleaning & preprocessing script
+│   ├── database.db                  # Local SQLite database fallback
+│   ├── requirements.txt             # Python dependencies (flask, mysql-connector, requests, dotenv)
+│   ├── .env                         # Server environment variables & Gemini API keys
+│   └── data/
+│       ├── smartwatch_data.csv      # Raw uncleaned Samsung wearable telemetry
+│       ├── cleaned_smartwatch_data.csv # Pipeline-sanitized health records
+│       └── indian_food_nutrition.json  # Comprehensive Indian recipe nutritional dataset
+└── React/                           # Frontend React 19 Application
+    ├── package.json                 # Node manifest & scripts
+    ├── vite.config.js               # Vite build configuration
+    ├── capacitor.config.json        # Capacitor Android configuration
+    ├── android/                     # Android Studio native project scaffolding
+    └── src/
+        ├── main.jsx                 # React root entry point
+        ├── App.jsx                  # Main application state orchestrator & action dispatcher
+        ├── App.css                  # Global styles & responsive layout
+        ├── index.css                # CSS variables, theme design tokens, glassmorphism
+        ├── components/
+        │   ├── Onboarding.jsx       # 4-step interactive profile wizard
+        │   ├── Dashboard.jsx        # Primary HUD (Calories, Macros, Water, Vitals, RDA)
+        │   ├── MealPlanner.jsx      # Weekly meal scheduler & swap manager
+        │   ├── RecipeLibrary.jsx    # Searchable, filterable Indian recipe catalog
+        │   ├── RecipeModal.jsx      # Deep-dive nutrition & ingredients modal
+        │   ├── ShoppingList.jsx     # Smart categorized grocery checklist
+        │   ├── DataTables.jsx       # Consolidated developer/clinical audit logs
+        │   ├── Chatbot.jsx          # AI Diet Coach conversational drawer
+        │   └── Sidebar.jsx          # Responsive desktop/mobile navigation
+        ├── data/
+        │   └── recipes.js           # Curated frontend recipe dataset
+        └── utils/
+            ├── api.js               # HTTP client abstraction with error handling
+            └── firebase.js          # Optional Firebase Auth/Firestore SDK connector
+```
+
+### 4.3 Key Algorithms & Implementation Details
+
+#### A. Anthropometric Caloric & Macro Formulation (Mifflin-St Jeor)
+In `Onboarding.jsx` and `app.py`:
+- BMR (Male): 10 * weight(kg) + 6.25 * height(cm) - 5 * age + 5
+- BMR (Female): 10 * weight(kg) + 6.25 * height(cm) - 5 * age - 161
+- TDEE: BMR * Activity Multiplier (1.2 to 1.9)
+- Weight Loss Target: TDEE - 500 kcal
+- Weight Gain Target: TDEE + 400 kcal
+- Balanced Split: 25% Protein, 50% Carbs, 25% Fat
+
+#### B. Telemetry Cleaning & Sleep Recovery Score
+In `data_pipeline.py`:
+- Outliers (BPM < 40 or > 220; SpO2 < 80%) are replaced with statistical medians.
+- Active Calories Burned: (Steps * 0.04) + (Heart Rate - 60) * 1.5
+- Sleep Recovery Score (0-100): min(100, max(0, (Sleep Hours / 8.0) * 70 + (10 - Stress Level) * 3))
+
+#### C. Hybrid Recommendation Kernel with XAI
+In `app.py`:
+- Score(u, i) = alpha * Sim_content(u, i) + (1 - alpha) * Rating_collaborative(u, i)
+- Hard medical safety filters for Sodium and Free Sugar.
+- Real-time IoT biometric adjustments.
+- Natural language justifications (XAI) for clinical transparency.
+
+#### D. Agentic Gemini Action Protocol
+In `app.py` and `App.jsx`:
+- The model outputs: `ACTION_TRIGGER: {"type": "add_water", "amount": 500}`
+- The Flask backend intercepts, cleans the reply text, and returns structured JSON.
+- `handleChatAction` in React updates state variables and synchronizes with the database.
+
+---
+
+### 4.4 Local Setup & Execution Guide
+
+#### Prerequisites
+- Node.js (v18+ or v22 LTS) & npm
+- Python (v3.10 to v3.13)
+- MySQL Server (Optional, auto-falls back to SQLite)
+
+#### Backend Setup
+```bash
+# 1. Navigate to backend directory
+cd d:\React\backend
+
+# 2. Install Python dependencies
+pip install -r requirements.txt
+
+# 3. Configure environment variables in backend/.env
+# PORT=5000
+# DB_HOST=localhost
+# DB_PORT=3306
+# DB_USER=root
+# DB_PASSWORD=your_password
+# DB_NAME=nutriguide
+# GEMINI_API_KEY=your_gemini_api_key
+
+# 4. Start Flask Backend Server
+python app.py
+# Server starts on http://localhost:5000
+```
+
+#### Frontend Setup
+```bash
+# 1. Navigate to React directory
+cd d:\React\React
+
+# 2. Install Node dependencies
+npm install
+
+# 3. Launch Vite Development Server
+npm run dev
+# Application available on http://localhost:5173
+```
+
+#### Mobile Android Compilation (Capacitor)
+```bash
+cd d:\React\React
+npm run build
+npx cap sync
+npx cap open android
+# Opens Android Studio to generate / run NutriGuide.apk
+```
+
+---
+
+### 4.5 GitHub Repository & Version Control Strategy
+
+#### Recommended Repository Layout
+```text
+https://github.com/<username>/NutriGuide-AI-Diet-Coach
+├── .gitignore
+├── README.md
+├── PROJECT_DOCUMENTATION.md
+├── PROJECT_DOCUMENTATION.html
+├── backend/
+└── React/
+```
+
+#### Standard Git Commands
+```bash
+# Initialize and stage
+git init
+git add .
+
+# Conventional Commit
+git commit -m "feat(agent): enable live Gemini 3 agentic workflow and dual database fallback"
+
+# Branching strategy
+git checkout -b feature/gemini-diet-coach
+git push origin feature/gemini-diet-coach
+```
+
+#### `.gitignore` Configuration
+```gitignore
+# Dependencies
+node_modules/
+__pycache__/
+*.pyc
+
+# Environment & Secrets
+.env
+.env.local
+*.key
+
+# Build outputs
+dist/
+build/
+android/app/build/
+.gradle/
+
+# Local databases
+backend/*.db
+backend/*.sqlite
+```
+
+---
+
+## 5. Software Testing Suite
+
+### 5.1 Test Strategy & Scope
+NutriGuide employs a multi-layered verification strategy:
+1. **Unit Testing**: Mathematical correctness of BMR/TDEE calculations, data pipeline cleaning rules, and macro split logic.
+2. **Integration Testing**: Dual database persistence (MySQL to SQLite fallback), and REST API client communication.
+3. **Agentic System Testing**: Gemini API intent detection, action formatting, and autonomous UI state execution.
+4. **Resilience & Fallback Testing**: Validating system behavior during network disconnection and API unavailability.
+5. **Cross-Platform / Mobile Testing**: UI responsiveness across viewports and Capacitor Android APK installation.
+
+### 5.2 Detailed Test Cases & Execution Matrix
+
+| Test ID | Module | Scenario | Input / Action | Expected Result | Actual Result | Status |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| **TC-01** | BMR Calculator | Male, 70kg, 175cm, 25yr | Calculate BMR using Mifflin-St Jeor | BMR = 10(70) + 6.25(175) - 5(25) + 5 = 1674 kcal | 1674 kcal returned | **PASS** |
+| **TC-02** | Telemetry Pipeline | Corrupted Heart Rate (`-10`, `nan`, `999`) | Ingest raw `smartwatch_data.csv` through `data_pipeline.py` | Outliers purged; replaced with sample median (72 BPM) | Valid cleaned dataset generated | **PASS** |
+| **TC-03** | Database Fallback | MySQL Service Offline | Start backend with stopped MySQL service | Catch connection exception, initialize SQLite `database.db`, and log warning | SQLite activated, tables created | **PASS** |
+| **TC-04** | State API | Fetch initial state | `GET http://localhost:5000/api/state` | HTTP 200 with default user state dictionary | HTTP 200, valid JSON payload | **PASS** |
+| **TC-05** | State API | Update water intake | `POST http://localhost:5000/api/state` `{ "waterIntake": 3 }` | HTTP 200, database records updated | HTTP 200, state synchronized | **PASS** |
+| **TC-06** | Gemini AI Coach | Natural Language Advice | `POST /api/chat` with user query | Personalized nutrition advice matching user goal | Cohesive, clinically grounded response | **PASS** |
+| **TC-07** | Agentic Action | Hydration Voice Command | Message: *"I drank 500ml of water"* | AI emits `ACTION_TRIGGER: {"type": "add_water", "amount": 500}` | Action parsed; water intake increased by 2 cups | **PASS** |
+| **TC-08** | Agentic Navigation| Tab Switch Command | Message: *"Take me to my shopping list"* | AI emits `ACTION_TRIGGER: {"type": "change_tab", "tab": "shopping"}` | Frontend navigates to Shopping List tab | **PASS** |
+| **TC-09** | AI Fallback | Gemini API Down / Offline | Simulate network timeout on Gemini endpoint | Fallback to deterministic rule-based keyword matcher without crashing | Friendly rule-based reply returned | **PASS** |
+| **TC-10** | Mobile Native | Android APK Verification | Build and install `NutriGuide.apk` on Android emulator/device | App launches cleanly with full offline feature set | App renders at 60fps with touch responsiveness | **PASS** |
+
+---
+
+## 6. Conclusion & Future Roadmap
+
+NutriGuide demonstrates a clinically grounded, intelligent approach to digital lifestyle intervention. By orchestrating wearable data streams, regional Indian nutrition databases, hybrid recommendation models, and Google Gemini 3 agentic AI, it transitions digital health from passive calorie tracking to active, autonomous wellness coaching.
+
+### Future Roadmap
+1. **Computer Vision Food Logging**: Real-time food recognition using Gemini Vision API for camera-based Indian dish identification.
+2. **Continuous Glucose Monitor (CGM) Integration**: Direct Bluetooth Low Energy (BLE) integration with Dexcom and FreeStyle Libre sensors.
+3. **Multi-Lingual Audio Coaching**: Real-time voice interaction in regional Indian languages (Hindi, Tamil, Telugu, Kannada) via Gemini Live Audio.
+  </script>
+
+  <script>
+    // Initialize Mermaid
+    mermaid.initialize({ startOnLoad: false, theme: 'neutral' });
+
+    // Render Markdown using Marked
+    const rawMd = document.getElementById('raw-markdown').innerText;
+    const contentDiv = document.getElementById('content');
+    
+    // Configure Marked with custom renderer for Mermaid codeblocks
+    const renderer = new marked.Renderer();
+    const defaultCode = renderer.code.bind(renderer);
+    
+    renderer.code = function(code, language) {
+      if (typeof code === 'object' && code.text) {
+        language = code.lang;
+        code = code.text;
+      }
+      if (language === 'mermaid') {
+        return `<div class="mermaid">${code}</div>`;
+      }
+      return defaultCode(code, language);
+    };
+
+    marked.setOptions({ renderer: renderer });
+    contentDiv.innerHTML = marked.parse(rawMd);
+
+    // Trigger Mermaid diagram rendering
+    setTimeout(() => {
+      mermaid.run({
+        querySelector: '.mermaid'
+      });
+    }, 100);
+  </script>
+</body>
+</html>

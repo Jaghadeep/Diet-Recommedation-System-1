@@ -7,6 +7,7 @@ import RecipeLibrary from './components/RecipeLibrary';
 import ShoppingList from './components/ShoppingList';
 import DataTables from './components/DataTables';
 import RecipeModal from './components/RecipeModal';
+import Chatbot from './components/Chatbot';
 import { recipes } from './data/recipes';
 import { fetchState, saveState, resetState } from './utils/api';
 import './App.css';
@@ -14,6 +15,11 @@ import './App.css';
 export default function App() {
   const [profile, setProfile] = useState(null);
   const [activeTab, setActiveTab] = useState('dashboard');
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', 'light');
+    localStorage.setItem('nutriguide_theme', 'light');
+  }, []);
+
   const [mealPlan, setMealPlan] = useState(null);
   
   const [completedMeals, setCompletedMeals] = useState({ 
@@ -238,6 +244,36 @@ export default function App() {
     setShoppingCheckedItems({});
   };
 
+  const handleChatAction = (action) => {
+    if (!action) return;
+    switch (action.type) {
+      case 'add_water':
+        const cupsToAdd = Math.round((action.amount || 250) / 250);
+        setWaterIntake((prev) => Math.max(0, Math.min(8, prev + cupsToAdd)));
+        break;
+      case 'toggle_meal':
+        if (action.mealType) {
+          handleToggleMealEaten(action.mealType);
+        }
+        break;
+      case 'swap_meal':
+        if (action.mealType) {
+          handleSwapMeal(action.mealType);
+        }
+        break;
+      case 'reset_profile':
+        handleResetProfile();
+        break;
+      case 'change_tab':
+        if (action.tab) {
+          setActiveTab(action.tab);
+        }
+        break;
+      default:
+        console.warn('Unknown chatbot action:', action);
+    }
+  };
+
   // Render Page Content based on selected tab
   const renderTabContent = () => {
     switch (activeTab) {
@@ -254,6 +290,16 @@ export default function App() {
         );
       case 'recipes':
         return <RecipeLibrary onViewRecipe={setSelectedRecipe} />;
+      case 'chat':
+        return (
+          <Chatbot
+            profile={profile}
+            mealPlan={mealPlan}
+            completedMeals={completedMeals}
+            waterIntake={waterIntake}
+            onChatAction={handleChatAction}
+          />
+        );
       case 'shopping':
         return (
           <ShoppingList
@@ -284,6 +330,7 @@ export default function App() {
             toggleMealEaten={handleToggleMealEaten}
             waterIntake={waterIntake}
             setWaterIntake={setWaterIntake}
+            setActiveTab={setActiveTab}
           />
         );
     }

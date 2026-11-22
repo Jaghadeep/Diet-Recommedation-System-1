@@ -5,7 +5,9 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "dev": "node --watch server.js"
+    "dev": "node --watch server.js",
+    "start:python": "python app.py",
+    "dev:python": "python app.py"
   },
   "dependencies": {
     "cors": "^2.8.5",
